@@ -1,0 +1,162 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-input/paper-textarea.html">
+
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <ee-double-input></ee-double-input>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="ee-double-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        width: 300px;
+      }
+
+      #icon {
+        top: 1em;
+        @apply(--double-input-icon);
+      }
+
+      #row {
+        @apply(--layout-horizontal);
+      }
+
+      #oneWrapper {
+        @apply(--layout-flex-2);
+      }
+
+      #spacer {
+        @apply(--layout-flex);
+      }
+
+      #twoWrapper {
+        @apply(--layout-flex-3);
+      }
+
+      .input {
+        --paper-input-container-input: {
+          font-size: 0.9em;
+          line-height: 1em;
+        };
+
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+
+        --paper-input-container-disabled: {
+          opacity: 0.9;
+        };
+
+        @apply(--double-input-input);
+      }
+
+      .edit {
+        -ms-transform: rotate(40deg); /* IE 9 */
+        -webkit-transform: rotate(40deg); /* Safari */
+        transform: rotate(40deg);
+        -webkit-transition: transform 0.3s ease-in-out;
+      }
+
+    </style>
+
+    <div id="row">
+      <paper-icon-button id="icon" icon$="[[icon]]" on-tap="_toggleEdit"></paper-icon-button>
+      <div id="oneWrapper">
+        <paper-textarea class="input"
+          label="[[leftLabel]]"
+          disabled="[[disabled]]"
+          value="{{leftValue::change}}"></paper-textarea>
+      </div>
+      <div id="spacer"></div>
+      <div id="twoWrapper">
+        <paper-textarea class="input"
+          label="[[rightLabel]]" 
+          disabled="[[disabled]]"
+          value="{{rightValue::change}}"></paper-textarea>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'ee-double-input',
+
+      properties: {
+        icon: {
+          type: String,
+          value: 'icons:settings'
+        },
+          
+        disabled: {
+          type: Boolean,
+          value: true,
+          notify: true
+        },
+
+        leftLabel: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        rightLabel: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        rightValue: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        leftValue: {
+          type: String,
+          value: '',
+          notify: true
+        },        
+
+      },
+
+      enable: function() {
+        this.disabled = false;
+        this.$.icon.classList.add('edit');
+        this.fire('edit-start');
+      },
+
+      disable: function() {
+        this.disabled = true;
+        this.$.icon.classList.remove('edit');
+        this.fire('edit-end');
+      },        
+
+      _toggleEdit: function() {
+        if (this.disabled) {
+          this.enable();
+        } else {
+          this.disable();
+        }
+      },
+
+    });
+  </script>
+</dom-module>
